@@ -55,7 +55,7 @@ public class AddField extends Transform<StructuredRecord, StructuredRecord> {
 
     @Name(FIELD_NAME)
     @Description("The name of the field to add. Must not already exist as an input field. The field type will be " +
-      "a nullable string.")
+            "a nullable string.")
     private String fieldName;
 
     @Macro
@@ -82,7 +82,7 @@ public class AddField extends Transform<StructuredRecord, StructuredRecord> {
         for (Schema.Field field : inputSchema.getFields()) {
           if (field.getName().equals(fieldName)) {
             throw new IllegalArgumentException(
-              String.format("Field '%s' already exists in the input schema.", fieldName));
+                    String.format("Field '%s' already exists in the input schema.", fieldName));
           }
         }
       }
@@ -120,7 +120,7 @@ public class AddField extends Transform<StructuredRecord, StructuredRecord> {
       // this can only happen when the input schema is not constant and known at configure time
       if (inputFieldName.equals(config.fieldName)) {
         emitter.emitError(new InvalidEntry<>(400, String.format("field '%s' already exists in input", config.fieldName),
-                                             record));
+                record));
         return;
       }
       builder.set(inputFieldName, record.get(inputFieldName));
@@ -138,7 +138,7 @@ public class AddField extends Transform<StructuredRecord, StructuredRecord> {
   private Schema getOutputSchema(Schema inputSchema, Conf config) {
     List<Schema.Field> fields = new ArrayList<>(inputSchema.getFields().size() + 1);
     fields.addAll(inputSchema.getFields());
-    fields.add(Schema.Field.of(config.fieldName, Schema.nullableOf(Schema.of(Schema.Type.STRING))));
+    fields.add(Schema.Field.of(config.fieldName, Schema.of(Schema.Type.STRING)));
     return Schema.recordOf(inputSchema.getRecordName() + ".added", fields);
   }
 
